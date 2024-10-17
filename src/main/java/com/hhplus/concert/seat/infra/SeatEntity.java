@@ -15,5 +15,6 @@ public class SeatEntity {
     private Long seatId;
     private int allSeat;
     private int remainderSeat;
+    private Long concertItemId;
 
 }

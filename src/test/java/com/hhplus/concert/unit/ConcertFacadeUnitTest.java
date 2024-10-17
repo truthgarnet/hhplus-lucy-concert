@@ -5,11 +5,8 @@ import com.hhplus.concert.concert.application.ConcertService;
 import com.hhplus.concert.concert.infra.ConcertEntity;
 import com.hhplus.concert.concertItem.application.ConcertItemService;
 import com.hhplus.concert.concertItem.infra.ConcertItemEntity;
-import com.hhplus.concert.concertItem.infra.ConcertItemJpaRepository;
 import com.hhplus.concert.concertReservation.application.ConcertReservationService;
 import com.hhplus.concert.concertReservation.infra.ConcertReservationEntity;
-import com.hhplus.concert.concertReservation.infra.ConcertReservationJpaRepository;
-import com.hhplus.concert.concertReservation.presentation.PaymentRequest;
 import com.hhplus.concert.concertReservation.presentation.RegistrationRequest;
 import com.hhplus.concert.concertReservation.presentation.RegistrationResponse;
 import com.hhplus.concert.seat.application.SeatService;
@@ -23,11 +20,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class ConcertFacadeUnitTest {
