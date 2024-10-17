@@ -35,7 +35,11 @@ public class TokenService {
         UserEntity user = userService.createUser(userId);
 
         // 0-2. 대기열 순번 조회
-        long waitingQue = tokenJpaRepository.findNextPriorityWaitNo(ProgressStatus.WAIT);
+        Long waitingQue = tokenJpaRepository.findNextPriorityWaitNo(ProgressStatus.WAIT);
+
+        if (waitingQue == null) {
+            waitingQue = 0L;
+        }
 
         long nextWaitingQue = 0;
         if (waitingQue != 0) {
@@ -74,6 +78,15 @@ public class TokenService {
         int currentWaitingQue = tokenEntity.getTokenId().intValue() - successToken;
 
         return new WaitingQueResponse(tokenEntity.getStatus(), currentWaitingQue);
+    }
+
+    public void checkValidToken(String token) {
+        // 스케쥴러로 만료 처리하니까 토큰 상태 값으로만 체크하는 게 맞다?
+        TokenEntity tokenEntity = tokenJpaRepository.findByToken(token).orElseThrow(() -> new CustomException(ErrorCode.TOKEN_ERROR));
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(tokenEntity.getExpiredDate())) {
+            throw new CustomException(ErrorCode.TOKEN_ERROR);
+        }
     }
 
     public void processToken() {

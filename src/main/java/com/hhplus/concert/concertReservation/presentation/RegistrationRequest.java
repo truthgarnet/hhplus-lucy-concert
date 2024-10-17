@@ -9,8 +9,8 @@ import java.util.Date;
 @Getter
 public class RegistrationRequest {
 
-    private Long userId;
-    private Date date;
+    private String userId;
+    private Long concertId;
     private Long seatId;
     private String token;
 

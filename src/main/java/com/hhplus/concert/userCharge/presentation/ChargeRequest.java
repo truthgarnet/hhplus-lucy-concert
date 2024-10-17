@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class ChargeRequest {
 
-    private Long userId;
+    private String userId;
     private String amount;
     private String token;
 

@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 public class PaymentRequest {
 
-    private Long userId;
+    private String userId;
+    private Long seatId;
     private int price;
     private String token;
 

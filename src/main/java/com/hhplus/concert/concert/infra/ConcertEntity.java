@@ -1,15 +1,17 @@
 package com.hhplus.concert.concert.infra;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Entity
 @Table(name = "concert")
 @Getter
+@AllArgsConstructor
 public class ConcertEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long concertId;
 
     @Column(length = 100)

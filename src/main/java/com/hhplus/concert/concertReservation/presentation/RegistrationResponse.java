@@ -1,5 +1,6 @@
 package com.hhplus.concert.concertReservation.presentation;
 
+import com.hhplus.concert.concertReservation.infra.ConcertReservationEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

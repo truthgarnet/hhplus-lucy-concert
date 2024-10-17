@@ -13,7 +13,7 @@ public class UserChargeEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userChargeId;
 
-    private Long userId;
+    private String userId;
     private int amount;
 
 }

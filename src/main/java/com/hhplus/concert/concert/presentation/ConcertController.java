@@ -1,20 +1,23 @@
 package com.hhplus.concert.concert.presentation;
 
-import com.hhplus.concert.concert.Concert;
-import com.hhplus.concert.concertItem.presentation.SearchDateResponse;
-import com.hhplus.concert.concertItem.presentation.SearchSeatResponse;
+import com.hhplus.concert.common.response.CommonResponse;
+import com.hhplus.concert.concert.application.ConcertFacade;
+import com.hhplus.concert.concertItem.application.ConcertItemService;
+import com.hhplus.concert.concertItem.infra.ConcertItemEntity;
+import com.hhplus.concert.concertItem.presentation.ConcertItemResponse;
 import com.hhplus.concert.concertReservation.presentation.PaymentRequest;
 import com.hhplus.concert.concertReservation.presentation.PaymentResponse;
 import com.hhplus.concert.concertReservation.presentation.RegistrationRequest;
 import com.hhplus.concert.concertReservation.presentation.RegistrationResponse;
-import com.hhplus.concert.user.application.User;
+import com.hhplus.concert.userCharge.application.UserChargeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.time.LocalDate;
 import java.util.List;
 
 @Tag(name = "concert", description = "콘서트에 관한 API입니다.")
@@ -22,39 +25,66 @@ import java.util.List;
 @RequestMapping(value = "concert")
 public class ConcertController {
 
+    @Autowired
+    private ConcertItemService concertItemService;
+
+    @Autowired
+    private ConcertFacade concertFacade;
+
+    @Autowired
+    private UserChargeService userChargeService;
+
     @Operation(summary = "예약 가능 날짜 검색합니다.")
     @GetMapping("search/date")
-    public SearchDateResponse searchAvailableDate(@RequestParam("date") String date) {
-        List<Concert> concertList = new ArrayList<>();
-        Concert concert1 = new Concert(1L, "루시의 낙화 콘서트", "고척돔", 100000);
-        Concert concert2 = new Concert(2L, "루시의 떼굴떼굴", "고척돔", 2500000);
-        concertList.add(concert1);
-        concertList.add(concert2);
+    public ResponseEntity<CommonResponse<Object>> searchAvailableDate(@RequestParam("date") String date) {
+        List<ConcertItemEntity> concertList = concertItemService.getAvailableDate();
 
-        return new SearchDateResponse(concertList);
+        CommonResponse<Object> response = CommonResponse.builder()
+                .msg("예약 가능 날짜를 검색했습니다.")
+                .data(concertList)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @Operation(summary = "날짜 정보를 입력받아 예약가능한 좌석정보를 조회합니다.")
+    @Operation(summary = "날짜 정보를 입력 받아 예약 가능한 좌석 정보를 조회합니다.")
     @GetMapping("search/seat")
-    public SearchSeatResponse searchSeat(@RequestParam("date") String date) {
-        List<Integer> availableSeats = Arrays.asList(1, 2, 5, 7, 8);
-        return new SearchSeatResponse(availableSeats);
+    public ResponseEntity<CommonResponse<Object>> searchSeat(@RequestParam("date") LocalDate date) {
+        List<ConcertItemResponse> seatList = concertItemService.getAvailableSeat(date);
+
+        CommonResponse<Object> response = CommonResponse.builder()
+                .msg("예약 가능한 좌석을 검색했습니다.")
+                .data(seatList)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Operation(summary = "좌석 예약 요청합니다.")
     @PostMapping("registration")
-    public RegistrationResponse registration(@RequestBody RegistrationRequest registrationRequest) {
-        LocalDateTime now = LocalDateTime.now();
-        return new RegistrationResponse(1L, 20L, now);
+    public  ResponseEntity<CommonResponse<Object>> registration(@RequestBody RegistrationRequest registrationRequest) {
+        RegistrationResponse registration = concertFacade.reservation(registrationRequest);
+
+        CommonResponse<Object> response = CommonResponse.builder()
+                .msg("좌석 예약을 성공했습니다.")
+                .data(registration)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Operation(summary = "콘서트 결제합니다.")
     @PostMapping("/payment/{concertId}")
-    public PaymentResponse paymentConcert(@PathVariable Long concertId, @RequestBody PaymentRequest paymentRequest) {
-        User user = new User(1L, "테스트");
-        Concert concert = new Concert(concertId, "루시콘서트", "고척돔", 100000);
-        LocalDateTime now = LocalDateTime.now();
-        return new PaymentResponse(user, concert, now);
+    public ResponseEntity<CommonResponse<Object>> paymentConcert(@PathVariable Long concertId, @RequestBody PaymentRequest paymentRequest) {
+        PaymentResponse payment = concertFacade.pay(concertId, paymentRequest);
+
+        CommonResponse<Object> response = CommonResponse.builder()
+                .msg("콘서트 결제를 성공했습니다.")
+                .data(payment)
+                .build();
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

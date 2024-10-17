@@ -4,17 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class SearchSeatResponse {
+public class ConcertItemResponse {
 
-    private LocalDate searchDate;
-
-    private ConcertItemResponse concertResponse;
-
+    private Long concertId;
+    private List<Long> seat;
 
 }
