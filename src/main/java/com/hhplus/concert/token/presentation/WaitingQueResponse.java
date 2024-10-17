@@ -1,5 +1,6 @@
-package com.hhplus.concert.waitingQue.presentation;
+package com.hhplus.concert.token.presentation;
 
+import com.hhplus.concert.token.application.ProgressStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class WaitingQueResponse {
 
-    private Long userId;
-    private int waitingOrder;
+    private ProgressStatus status;
+    private int waiting;
 
 }

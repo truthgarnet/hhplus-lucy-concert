@@ -7,7 +7,6 @@ import lombok.Getter;
 @Getter
 public class TokenRequest {
 
-    private Long uuid;
-    private Long waistId;
+    private String userId;
 
 }

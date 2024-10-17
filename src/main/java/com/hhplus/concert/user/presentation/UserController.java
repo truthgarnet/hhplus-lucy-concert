@@ -1,32 +1,53 @@
 package com.hhplus.concert.user.presentation;
 
+import com.hhplus.concert.common.response.CommonResponse;
+import com.hhplus.concert.token.application.TokenService;
 import com.hhplus.concert.token.presentation.TokenRequest;
 import com.hhplus.concert.token.presentation.TokenResponse;
-import com.hhplus.concert.waitingQue.presentation.WaitingQueResponse;
+import com.hhplus.concert.token.presentation.WaitingQueResponse;
+import com.hhplus.concert.user.application.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @Tag(name = "user", description = "사용자에 관한 API입니다.")
 @RestController
 @RequestMapping(value = "user")
 public class UserController {
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private TokenService tokenService;
+
     @Operation(summary = "대기열 토큰을 생성합니다.")
     @PostMapping("/token")
-    public TokenResponse token(@RequestBody TokenRequest tokenRequest) {
-        LocalDateTime date = LocalDateTime.now();
-        date.plusMinutes(10);
+    public ResponseEntity<CommonResponse<Object>> token(@RequestBody String userId) {
+        TokenResponse tokenResponse = tokenService.createToken(userId);
 
-        return new TokenResponse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.eaBjZPHZMZ2xTqPy_JPexYz0gZPAmvFCqffvjJDluZ8", date);
+        CommonResponse<Object> response = CommonResponse.builder()
+                .msg("대기열 토큰을 생성했습니다.")
+                .data(tokenResponse)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Operation(summary = "본인의 대기번호를 조회합니다.")
     @GetMapping("/waitingQue")
-    public WaitingQueResponse getWaitingQue(@RequestParam("token") String token) {
-        return new WaitingQueResponse(1L, 3);
+    public ResponseEntity<CommonResponse<Object>> getWaitingQue(@RequestParam("token") String token) {
+        WaitingQueResponse tokenResponse = tokenService.getToken(token);
+
+        CommonResponse<Object> response = CommonResponse.builder()
+                .msg("대기열 토큰을 조회했습니다.")
+                .data(tokenResponse)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
