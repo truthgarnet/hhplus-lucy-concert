@@ -69,7 +69,7 @@ public class ConcertFacadeUnitTest {
         LocalDate reservationEnd = LocalDate.now().plusDays(1);
         LocalDate concertStart = LocalDate.now().plusMonths(2);
 
-        RegistrationRequest request = new RegistrationRequest(userId, seatId, concertId, token);
+        RegistrationRequest request = new RegistrationRequest(userId, concertId, seatId, token);
 
         // Mock 각 서비스의 동작
         ConcertReservationEntity reservation = new ConcertReservationEntity(userId, concertId, seatId, 0);
@@ -82,6 +82,7 @@ public class ConcertFacadeUnitTest {
         when(concertItemService.getConcertItem(concertId)).thenReturn(concertItem);
         when(seatService.getSeat(seatId)).thenReturn(seat);
         when(concertService.getConcert(concertId)).thenReturn(concert);
+        // when(concertFacade.)
 
         // When: 파사드 메소드 호출
         RegistrationResponse response = concertFacade.reservation(request);

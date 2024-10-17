@@ -55,6 +55,7 @@ public class ConcertFacade {
         SeatEntity seat = seatService.getSeat(reservation.getSeatId());
         ConcertEntity concert = concertService.getConcert(request.getConcertId());
 
+
         return new RegistrationResponse(concert.getConcertId(), seat.getSeatId(), LocalDateTime.now());
     }
 
