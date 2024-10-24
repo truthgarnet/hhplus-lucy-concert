@@ -8,10 +8,12 @@ import com.hhplus.concert.concertItem.infra.ConcertItemJpaRepository;
 import com.hhplus.concert.concertItem.presentation.ConcertItemResponse;
 import com.hhplus.concert.seat.infra.SeatEntity;
 import com.hhplus.concert.seat.infra.SeatJpaRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -36,17 +38,26 @@ public class ConcertSearchTest {
     @InjectMocks
     private ConcertItemService concertItemService;
 
+    private LocalDate now;
+    private LocalDate concertStart;
+    private Long seat1Id = 101L;
+    private Long seat2Id = 102L;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        now = LocalDate.now();
+        concertStart = now.plusMonths(2);
+    }
+
     @Test
     @DisplayName("예약 가능 날짜 검색 하기")
     public void testGetAvailableDate() {
         // Given
-        LocalDate now = LocalDate.now();
-
-        List<Long> seatIds = Arrays.asList(1L, 2L, 3L);
         LocalDate concertStart = LocalDate.now().plusMonths(2);
         List<ConcertItemEntity> mockConcertItems = Arrays.asList(
-                new ConcertItemEntity(1L, seatIds, now, now.plusDays(2), concertStart),
-                new ConcertItemEntity(2L, seatIds, now.plusDays(1), now.plusDays(10), concertStart)
+                new ConcertItemEntity(1L, seat1Id, now, now.plusDays(2), concertStart),
+                new ConcertItemEntity(2L, seat2Id, now.plusDays(1), now.plusDays(10), concertStart)
         );
 
         // When
@@ -64,26 +75,25 @@ public class ConcertSearchTest {
     @Test
     @DisplayName("날짜 정보를 입력 받아 예약 가능한 좌석 정보를 조회합니다.")
     public void testGetAvailableSeat() {
-        LocalDate now = LocalDate.now();
-        LocalDate concertStart = LocalDate.now().plusMonths(2);
 
-        List<Long> seatIds = Arrays.asList(1L, 2L, 3L);
+        Long concertId = 1L;
+
         List<ConcertItemEntity> mockConcertItems = Arrays.asList(
-                new ConcertItemEntity(1L, seatIds, now, now.plusDays(2), concertStart),
-                new ConcertItemEntity(2L, seatIds, now.plusDays(1), now.plusDays(10), concertStart)
+                new ConcertItemEntity(seat1Id, seat1Id, now.plusDays(2), now.plusDays(2), concertStart),
+                new ConcertItemEntity(seat2Id, seat2Id, now.minusDays(1), now.plusDays(10), concertStart)
         );
 
         String concertLocation = "상암동";
         ConcertEntity concertEntity1 = new ConcertEntity(1L, "루시 열콘서트", concertLocation, 100000, 1L);
-        ConcertEntity concertEntity2 = new ConcertEntity(2L, "루시 떼굴뗴굴", concertLocation, 200000, 1L);
+        ConcertEntity concertEntity2 = new ConcertEntity(2L, "루시 떼굴뗴굴", concertLocation, 200000, 2L);
 
-        List<SeatEntity> seatEntities1 = Arrays.asList(new SeatEntity(1L, 50, 50), new SeatEntity(2L, 50, 50));
-        List<SeatEntity> seatEntities2 = Arrays.asList(new SeatEntity(3L, 50, 50), new SeatEntity(4L, 50, 50));
+        List<SeatEntity> seatEntities1 = Arrays.asList(new SeatEntity(1L, 50, 50, 1L), new SeatEntity(2L, 50, 50, 2L));
+        List<SeatEntity> seatEntities2 = Arrays.asList(new SeatEntity(3L, 50, 50, 3L), new SeatEntity(4L, 50, 50, 4l));
 
         // Mocking the repository calls
-        when(concertItemJpaRepository.findReservationsBetween(now)).thenReturn(mockConcertItems);
-        when(concertJpaRepository.findByConcertItemId(1L)).thenReturn(Optional.of(concertEntity1));
-        when(concertJpaRepository.findByConcertItemId(2L)).thenReturn(Optional.of(concertEntity2));
+        when(concertItemJpaRepository.findReservationsBetween(any(LocalDate.class))).thenReturn(mockConcertItems);
+        when(concertJpaRepository.findByConcertItemId(1L)).thenReturn(Optional.ofNullable((concertEntity1)));
+        when(concertJpaRepository.findByConcertItemId(2L)).thenReturn(Optional.ofNullable((concertEntity2)));
         when(seatJpaRepository.findByConcertItemId(1L)).thenReturn(seatEntities1);
         when(seatJpaRepository.findByConcertItemId(2L)).thenReturn(seatEntities2);
 

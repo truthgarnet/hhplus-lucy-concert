@@ -54,7 +54,4 @@ public class ConcertItemService {
         return concertItemResponses;
     }
 
-    public ConcertItemEntity getConcertItem(Long concertId) {
-        return concertItemJpaRepository.findByConcertId(concertId).orElseThrow(() -> new CustomException(ErrorCode.DATABASE_ERROR));
-    }
 }

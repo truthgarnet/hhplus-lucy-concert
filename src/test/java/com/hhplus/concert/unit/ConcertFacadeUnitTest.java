@@ -86,7 +86,6 @@ public class ConcertFacadeUnitTest {
         // 각 서비스가 한 번씩만 호출되었는지 검증
         verify(tokenService, times(1)).checkValidToken(token);
         verify(concertReservationService, times(1)).reservation(request);
-        verify(concertItemService, times(1)).getConcertItem(concertId);
         verify(seatService, times(1)).getSeat(seatId);
     }
 

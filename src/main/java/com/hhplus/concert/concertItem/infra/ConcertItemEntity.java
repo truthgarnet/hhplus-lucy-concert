@@ -21,6 +21,5 @@ public class ConcertItemEntity {
     private LocalDate reservationStart;
     private LocalDate reservationEnd;
     private LocalDate concertStart;
-    private Long concertId;
 
 }

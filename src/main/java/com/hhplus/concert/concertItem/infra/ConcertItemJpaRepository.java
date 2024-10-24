@@ -14,6 +14,4 @@ public interface ConcertItemJpaRepository extends JpaRepository<ConcertItemEntit
 
     @Query(value = "SELECT * FROM concert_item WHERE :now BETWEEN reservation_start AND reservation_end", nativeQuery = true)
     List<ConcertItemEntity> findReservationsBetween(@Param(value = "now") LocalDate now);
-
-    Optional<ConcertItemEntity> findByConcertId(Long concertId);
 }
