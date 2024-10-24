@@ -3,6 +3,7 @@ package com.hhplus.concert.common.filter;
 import com.hhplus.concert.common.exception.TokenErrorException;
 import com.hhplus.concert.common.exception.TokenExpiredException;
 import com.hhplus.concert.token.application.TokenService;
+import com.hhplus.concert.token.application.TokenStatus;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,8 +35,12 @@ public class TokenFilter extends OncePerRequestFilter {
             if (token == null) {
                 throw new TokenErrorException("토큰이 없습니다.");
             } else {
-                boolean isExpired = tokenService.isExpired(token);
-                if (isExpired) {
+                TokenStatus tokenStatus = tokenService.getStatus(token);
+                if (tokenStatus == TokenStatus.INVALID) {
+                    throw new TokenErrorException("토큰이 존재하지 않습니다.");
+                }
+
+                if (tokenStatus == TokenStatus.EXPIRED) {
                     throw new TokenExpiredException("토큰이 만료되었습니다.");
                 }
             }

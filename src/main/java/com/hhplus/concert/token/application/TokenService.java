@@ -88,21 +88,27 @@ public class TokenService {
         }
     }
 
-    public boolean isExpired(String token) {
+    public TokenStatus getStatus(String token) {
         LocalDateTime now = LocalDateTime.now();
-
-        Optional<TokenEntity> tokenEntity = tokenJpaRepository.findByExpiredDateAfterAndToken(now, token);
-        
-        // 토큰이 만료됨
-        if (tokenEntity.isPresent()) {
-            return false;
+        Optional<TokenEntity> existsToken = tokenJpaRepository.findByToken(token);
+        if (!existsToken.isPresent()) {
+            return TokenStatus.INVALID;
         }
 
-        return true;
+        Optional<TokenEntity> tokenEntity = tokenJpaRepository.findByExpiredDateAfterAndToken(now, token);
+
+        // 토큰이 만료됨
+        if (!tokenEntity.isPresent()) {
+            return TokenStatus.EXPIRED;
+        }
+
+        return TokenStatus.VALID;
     }
 
     public void updateExpire() {
         // 토큰 만료 처리
         tokenJpaRepository.updateExpireToken();
     }
+
+
 }
