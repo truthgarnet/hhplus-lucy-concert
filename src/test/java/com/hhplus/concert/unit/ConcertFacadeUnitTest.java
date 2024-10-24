@@ -4,13 +4,11 @@ import com.hhplus.concert.concert.application.ConcertFacade;
 import com.hhplus.concert.concert.application.ConcertService;
 import com.hhplus.concert.concert.infra.ConcertEntity;
 import com.hhplus.concert.concertItem.application.ConcertItemService;
-import com.hhplus.concert.concertItem.infra.ConcertItemEntity;
 import com.hhplus.concert.concertReservation.application.ConcertReservationService;
 import com.hhplus.concert.concertReservation.infra.ConcertReservationEntity;
 import com.hhplus.concert.concertReservation.presentation.RegistrationRequest;
 import com.hhplus.concert.concertReservation.presentation.RegistrationResponse;
 import com.hhplus.concert.seat.application.SeatService;
-import com.hhplus.concert.seat.infra.SeatEntity;
 import com.hhplus.concert.token.application.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -66,18 +64,14 @@ public class ConcertFacadeUnitTest {
         LocalDate reservationEnd = LocalDate.now().plusDays(1);
         LocalDate concertStart = LocalDate.now().plusMonths(2);
 
-        RegistrationRequest request = new RegistrationRequest(userId, concertId, seatId, token);
+        RegistrationRequest request = new RegistrationRequest(userId, concertId, seatId);
 
         // Mock 각 서비스의 동작
         ConcertReservationEntity reservation = new ConcertReservationEntity(userId, concertId, seatId, 0);
-        ConcertItemEntity concertItem = new ConcertItemEntity(concertItemId, seatIds, reservationStart, reservationEnd, concertStart);
-        SeatEntity seat = new SeatEntity(seatId, 50, 50);
         ConcertEntity concert = new ConcertEntity(concertId, "루시콘서트", "상암 실내 체육관", 156000, 1L);
 
         doNothing().when(tokenService).checkValidToken(token);  // tokenService의 메소드는 아무 작업도 하지 않도록 설정
         when(concertReservationService.reservation(request)).thenReturn(reservation);
-        when(concertItemService.getConcertItem(concertId)).thenReturn(concertItem);
-        when(seatService.getSeat(seatId)).thenReturn(seat);
         when(concertService.getConcert(concertId)).thenReturn(concert);
         // when(concertFacade.)
 
@@ -94,7 +88,6 @@ public class ConcertFacadeUnitTest {
         verify(concertReservationService, times(1)).reservation(request);
         verify(concertItemService, times(1)).getConcertItem(concertId);
         verify(seatService, times(1)).getSeat(seatId);
-        verify(concertService, times(1)).getConcert(concertItem.getConcertItemId());
     }
 
 }

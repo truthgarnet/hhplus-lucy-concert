@@ -19,9 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private TokenService tokenService;
 
     @Operation(summary = "대기열 토큰을 생성합니다.")
@@ -39,7 +36,7 @@ public class UserController {
 
     @Operation(summary = "본인의 대기번호를 조회합니다.")
     @GetMapping("/waitingQue")
-    public ResponseEntity<CommonResponse<Object>> getWaitingQue(@RequestParam("token") String token) {
+    public ResponseEntity<CommonResponse<Object>> getWaitingQue(@RequestHeader("Authorization") String token) {
         WaitingQueResponse tokenResponse = tokenService.getToken(token);
 
         CommonResponse<Object> response = CommonResponse.builder()

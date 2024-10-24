@@ -30,4 +30,6 @@ public interface TokenJpaRepository extends JpaRepository<TokenEntity, Long> {
 
     @Query(value = "UPDATE token SET expire_date=:expire_date AND status=:status WHERE expire_date < CURRENT_TIMESTAMP ", nativeQuery = true)
     void updateExpiredDateAndStatus(@Param("expire_date") LocalDateTime expire_date, @Param("status") ProgressStatus status);
+
+    Optional<TokenEntity> findByExpiredDateAfterAndToken(LocalDateTime now, String token);
 }

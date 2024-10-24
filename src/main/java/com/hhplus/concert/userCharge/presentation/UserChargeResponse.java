@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UserChargeResponse {
 
+    private String userId;
     private int balance;
 
 }
