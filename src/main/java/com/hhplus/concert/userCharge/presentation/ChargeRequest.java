@@ -9,6 +9,5 @@ public class ChargeRequest {
 
     private String userId;
     private String amount;
-    private String token;
 
 }

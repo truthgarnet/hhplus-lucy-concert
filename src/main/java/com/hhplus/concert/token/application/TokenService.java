@@ -13,9 +13,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class TokenService {
@@ -89,8 +88,17 @@ public class TokenService {
         }
     }
 
-    public void processToken() {
+    public boolean isExpired(String token) {
+        LocalDateTime now = LocalDateTime.now();
 
+        Optional<TokenEntity> tokenEntity = tokenJpaRepository.findByExpiredDateAfterAndToken(now, token);
+        
+        // 토큰이 만료됨
+        if (tokenEntity.isPresent()) {
+            return false;
+        }
+
+        return true;
     }
 
     public void updateExpire() {

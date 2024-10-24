@@ -12,9 +12,7 @@ import com.hhplus.concert.concertReservation.presentation.RegistrationResponse;
 import com.hhplus.concert.seat.application.SeatService;
 import com.hhplus.concert.seat.infra.SeatEntity;
 import com.hhplus.concert.token.application.TokenService;
-import com.hhplus.concert.user.application.User;
 import com.hhplus.concert.user.application.UserService;
-import com.hhplus.concert.user.infra.UserEntity;
 import com.hhplus.concert.userCharge.application.UserChargeService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +47,6 @@ public class ConcertFacade {
 
 
     public RegistrationResponse reservation(RegistrationRequest request) {
-        tokenService.checkValidToken(request.getToken());
         ConcertReservationEntity reservation = concertReservationService.reservation(request);
         ConcertItemEntity concertItem = concertItemService.getConcertItem(request.getConcertId());
         SeatEntity seat = seatService.getSeat(reservation.getSeatId());

@@ -53,7 +53,7 @@ public class ChargeFacadeUnitTest {
         Long seatId = 1L;
         String token = "token";
         int price = 50000;
-        PaymentRequest request = new PaymentRequest(userId, concertId, price, token);
+        PaymentRequest request = new PaymentRequest(userId, concertId, price);
 
         // Mock 콘서트와 사용자 정보 설정
         ConcertEntity mockConcert = new ConcertEntity(concertId, "루시", "상암동", 120000, 1L);

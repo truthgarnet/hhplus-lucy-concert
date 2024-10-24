@@ -10,6 +10,5 @@ public class PaymentRequest {
     private String userId;
     private Long seatId;
     private int price;
-    private String token;
 
 }
