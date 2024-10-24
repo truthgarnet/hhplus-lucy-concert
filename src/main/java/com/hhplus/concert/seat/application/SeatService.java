@@ -4,6 +4,7 @@ import com.hhplus.concert.common.exception.CustomException;
 import com.hhplus.concert.common.exception.ErrorCode;
 import com.hhplus.concert.seat.infra.SeatEntity;
 import com.hhplus.concert.seat.infra.SeatJpaRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,6 @@ public class SeatService {
     private SeatJpaRepository seatJpaRepository;
 
     public SeatEntity getSeat(Long seatId) {
-        return seatJpaRepository.findById(seatId).orElseThrow(() -> new CustomException(ErrorCode.ERROR));
+        return seatJpaRepository.findBySeatId(seatId).orElseThrow(() -> new CustomException(ErrorCode.ERROR));
     }
 }
