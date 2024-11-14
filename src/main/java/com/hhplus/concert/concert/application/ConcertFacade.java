@@ -56,6 +56,7 @@ public class ConcertFacade {
         userChargeService.checkValidMoney(request.getUserId(), request.getPrice());
         userChargeService.pay(concertId, request);
         userService.getUser(request.getUserId());
+        concertReservationService.registration(concertId, request.getUserId());
 
         smsService.sendRegistration(request.getUserId());
         ConcertEntity concert = concertService.getConcert(concertId);
