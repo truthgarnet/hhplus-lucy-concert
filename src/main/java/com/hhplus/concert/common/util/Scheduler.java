@@ -24,16 +24,33 @@ public class Scheduler {
 
         for (OutboxEntity message : messages) {
             try {
-                // 1. 카프카로 메시지 발행
                 kafkaTemplate.send("order-events", message.getPayload());
 
-                // 2. 발행 성공 시 상태 업데이트
                 message.setStatus("PROCESSED");
                 outboxJpaRepository.save(message);
             } catch (Exception e) {
-                // 발행 실패 시 로그 기록 (재시도는 다음 스케줄에서)
+                message.setStatus("FAILED");
+                outboxJpaRepository.save(message);
+
                 log.error("Failed to publish message: " + message.getId(), e);
             }
         }
     }
+
+    @Scheduled(fixedRate = 5000)
+    public void retryFailedMessages() {
+        List<OutboxEntity> failedMessages = outboxJpaRepository.findByStatus("FAILED");
+
+        for (OutboxEntity message : failedMessages) {
+            try {
+                kafkaTemplate.send("order-events", message.getPayload());
+
+                message.setStatus("PROCESSED");
+                outboxJpaRepository.save(message);
+            } catch (Exception e) {
+                log.error("Retry failed for message: " + message.getId(), e);
+            }
+        }
+    }
+
 }
