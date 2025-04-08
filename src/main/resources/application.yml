@@ -1,0 +1,20 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+    show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/concert?useSSL=false&allowPublicKeyRetrieval=true&noAccessToProcedureBodies=true
+    username: root
+    password: 1234
+  sql:
+    init:
+      data-locations: classpath*:db/data.sql
+      mode: always
+      platform: mysql
+jwt:
+  expiration_time: 600000 #10분
+  secret: 7ZWt7ZW0OTnrsLHsl5Trk5zro6jsi5zsvZjshJztirg=
+
