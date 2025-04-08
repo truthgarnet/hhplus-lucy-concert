@@ -46,13 +46,13 @@ SELECT concert.concert_id, concert.concert_name, concert.concert_location, item.
 
 ### 결과: Full Scan
 
-![image.png](index1.png)
+![image.png](img/index1.png)
 
 type이 ALL로 전체 행에 접근 했습니다.
 
 ### 적용 전: 속도
 
-![image.png](index2.png)
+![image.png](img/index2.png)
 
 ```sql
 CREATE INDEX idx_concert_item ON concert_item (reservation_start, reservation_end)
@@ -60,11 +60,11 @@ CREATE INDEX idx_concert_item ON concert_item (reservation_start, reservation_en
 
 ### 적용 후: 속도
 
-![image.png](index3.png)
+![image.png](img/index3.png)
 
 ### 결과: filtered 상승
 
-![image.png](index4.png)
+![image.png](img/index4.png)
 
 속도의 변화가 클 것이라고 생각했지만, 왠걸 똑같은 결과가 나왔습니다.
 
